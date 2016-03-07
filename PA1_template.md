@@ -15,7 +15,7 @@ options(scipen=99)
 library(sqldf)
 library(lattice) 
 
-setwd("/Users/rgangadharan/Development/RProgramming/ReproducibleResearch/RepData_PeerAssessment1-master")
+setwd("/Users/rgangadharan/Development/RProgramming/ReproducibleResearch/RepData_PeerAssessment1-master/RepData_PeerAssessment1")
 download.file("https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip",method="curl",destfile="a.zip")
 
 #1 Processing of Raw Data
@@ -26,15 +26,10 @@ rawDataByDay <- aggregate(rawData$steps, by=list(Date=rawData$date), FUN=sum, na
 
 ```r
 #2 Histogram
-#png(file="figures/HistRawDataFeedByDay.png",width=480,height=480)
 hist(rawDataByDay$x, xlab = "No of Steps per Day", ylab = "No of Days", main = "Histogram of Raw Data Feed By Day")
 ```
 
 ![plot of chunk HistStepsByDay](figure/HistStepsByDay-1.png)
-
-```r
-#dev.off()
-```
 
 
 ```r
@@ -59,16 +54,11 @@ You can also embed plots, for example:
 
 ```r
 #4 Time Series Plot
-#png(file="figures/rawDataByDay.png",width=480,height=480)
 plot(rawDataByDay$Date,rawDataByDay$x)
 lines(rawDataByDay$Date,rawDataByDay$x,type="l")
 ```
 
 ![plot of chunk TimeSeriesByDay](figure/TimeSeriesByDay-1.png)
-
-```r
-#dev.off()
-```
 
 
 ```r
@@ -102,15 +92,10 @@ dataByDay <- aggregate(data$steps, by=list(Date=data$date), FUN=sum, na.rm=TRUE)
 
 
 ```r
-#png(file="figures/ProcessedDataByDay.png",width=480,height=480)
 hist(dataByDay$x, xlab = "No of Steps per Day", ylab = "No of Days", main ="Histogram of Cleaned up Data by Day")
 ```
 
 ![plot of chunk HistNoOfStepsPerDay](figure/HistNoOfStepsPerDay-1.png)
-
-```r
-#dev.off()
-```
 
 
 
@@ -132,7 +117,6 @@ dataByInterval$weekDay.f<-factor(dataByInterval$weekDay,levels=c(0,1),
 
 
 ```r
-#png(file="figures/TimeSeriesByWeekDayWeekEnd.png",width=480,height=480)
 xyplot(dataByInterval$x~dataByInterval$interval|dataByInterval$weekDay.f,
           type="l",layout=c(1,2),
           plot.points = FALSE, auto.key = TRUE,
@@ -142,7 +126,3 @@ xyplot(dataByInterval$x~dataByInterval$interval|dataByInterval$weekDay.f,
 ```
 
 ![plot of chunk TimeSeriesByWeekDayWeekEnd](figure/TimeSeriesByWeekDayWeekEnd-1.png)
-
-```r
-#dev.off()
-```

@@ -9,7 +9,8 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r}
+
+```r
 options(scipen=99)
 library(sqldf)
 library(lattice) 
@@ -20,39 +21,69 @@ download.file("https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.z
 #1 Processing of Raw Data
 rawData <- read.table(unz("a.zip", "activity.csv"),sep=",",dec=".", header = TRUE)
 rawDataByDay <- aggregate(rawData$steps, by=list(Date=rawData$date), FUN=sum, na.rm=TRUE)
-
 ```
 
-```{r HistStepsByDay, echo=TRUE,fig.path="figure/"}
+
+```r
 #2 Histogram
 #png(file="figures/HistRawDataFeedByDay.png",width=480,height=480)
 hist(rawDataByDay$x, xlab = "No of Steps per Day", ylab = "No of Days", main = "Histogram of Raw Data Feed By Day")
+```
+
+![plot of chunk HistStepsByDay](figure/HistStepsByDay-1.png)
+
+```r
 #dev.off()
 ```
 
-```{r}
+
+```r
 #3 Mean and Median
 median(rawDataByDay$x)
-mean(rawDataByDay$x)
+```
 
+```
+## [1] 10395
+```
+
+```r
+mean(rawDataByDay$x)
+```
+
+```
+## [1] 9354.23
 ```
 
 You can also embed plots, for example:
 
-```{r TimeSeriesByDay, echo=TRUE,fig.path="figure/"}
+
+```r
 #4 Time Series Plot
 #png(file="figures/rawDataByDay.png",width=480,height=480)
 plot(rawDataByDay$Date,rawDataByDay$x)
 lines(rawDataByDay$Date,rawDataByDay$x,type="l")
+```
+
+![plot of chunk TimeSeriesByDay](figure/TimeSeriesByDay-1.png)
+
+```r
 #dev.off()
 ```
 
-```{r}
+
+```r
 #5 Interval with Max no of Steps
 #5 Interval with Max no of Steps
 rawDataByInterval <- aggregate(rawData$steps, by=list(interval=rawData$interval), FUN=mean, na.rm=TRUE)
 sqldf("select * from rawDataByInterval where x in  (select max(x) from rawDataByInterval)")
+```
 
+```
+##   interval        x
+## 1      835 206.1698
+```
+
+```r
 #6 Fix N/A data in raw Data
 data <- rawData
 for (i in 1:nrow(data))
@@ -69,15 +100,21 @@ for (i in 1:nrow(data))
 dataByDay <- aggregate(data$steps, by=list(Date=data$date), FUN=sum, na.rm=TRUE)
 ```
 
-```{r HistNoOfStepsPerDay, echo=TRUE,fig.path="figure/"}
+
+```r
 #png(file="figures/ProcessedDataByDay.png",width=480,height=480)
 hist(dataByDay$x, xlab = "No of Steps per Day", ylab = "No of Days", main ="Histogram of Cleaned up Data by Day")
-#dev.off()
+```
 
+![plot of chunk HistNoOfStepsPerDay](figure/HistNoOfStepsPerDay-1.png)
+
+```r
+#dev.off()
 ```
 
 
-```{r}
+
+```r
 #8 Panel plot comparing the average number of steps taken per 5-minute interval across weekdays and weekends
 
 weekdays = c("Monday","Tuesday","Wednesday","Thursday","Friday")
@@ -93,7 +130,8 @@ dataByInterval$weekDay.f<-factor(dataByInterval$weekDay,levels=c(0,1),
                labels=c("Weekend","WeekDays"))
 ```
 
-```{r TimeSeriesByWeekDayWeekEnd, echo=TRUE,fig.path="figure/"}
+
+```r
 #png(file="figures/TimeSeriesByWeekDayWeekEnd.png",width=480,height=480)
 xyplot(dataByInterval$x~dataByInterval$interval|dataByInterval$weekDay.f,
           type="l",layout=c(1,2),
@@ -101,6 +139,10 @@ xyplot(dataByInterval$x~dataByInterval$interval|dataByInterval$weekDay.f,
           main="Distribution of No Of Steps Over the entire Day",
           xlab="Time Interval",
           ylab="No Of Steps")
+```
 
+![plot of chunk TimeSeriesByWeekDayWeekEnd](figure/TimeSeriesByWeekDayWeekEnd-1.png)
+
+```r
 #dev.off()
 ```
